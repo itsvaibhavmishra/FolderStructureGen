@@ -17,7 +17,11 @@ def generate_folder_structure():
         messagebox.showerror("Error", "Folder not found.")
         return
 
-    output_file = f"{folder_path}_structure.md"  # Dynamically generate output filename
+    # Extract folder name from the folder path
+    folder_name = os.path.basename(folder_path)
+
+    # Adjust the output file path to be inside the selected folder
+    output_file = os.path.join(folder_path, f"{folder_name}_structure.md")
 
     progress_bar['value'] = 0
 
@@ -84,7 +88,7 @@ def reset():
     progress_label.config(text="")
 
 def open_github():
-    webbrowser.open_new_tab("https://github.com/itsvaibhavmishra/FolderStructureGen/Readme.md")
+    webbrowser.open_new_tab("https://github.com/itsvaibhavmishra/FolderStructureGen/README.md")
 
 root = tk.Tk()
 root.title("Folder Structure Generator by Vaibhaw Mishra")

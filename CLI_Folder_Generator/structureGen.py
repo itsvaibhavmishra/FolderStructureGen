@@ -13,16 +13,18 @@ def generate_folder_structure():
     print_centered("-=-=-=-=- https://github.com/itsvaibhavmishra -=-=-=-=-", Fore.LIGHTCYAN_EX)
     print("\n")
 
-    folder_name = input("Enter name of the folder to generate structure: ")
-    if not os.path.exists(folder_name):
+    folder_path = input("Enter name of the folder to generate structure: ")
+    if not os.path.exists(folder_path):
         print(f"{Fore.LIGHTRED_EX}Folder not found.{Style.RESET_ALL}")
         return
     
+    folder_name = os.path.basename(folder_path)
+
     excluded_items_input = input("Enter folders or files to exclude (comma-separated): ")
     excluded_items = [item.strip() for item in excluded_items_input.split(",")]
 
     print(f"{Fore.LIGHTBLUE_EX}\nScript started...{Style.RESET_ALL}")
-    output_file = f"{folder_name}_structure.md"  # Dynamically generate output filename
+    output_file = os.path.join(folder_path, f"{folder_name}_structure.md")  # Adjust the output file path
 
     start_time = time.time()
 
@@ -31,18 +33,17 @@ def generate_folder_structure():
         f.write("### by [Vaibhaw Mishra](https://github.com/itsvaibhavmishra)\n\n")
         f.write("```\n")
 
-        total_items = count_items(folder_name, excluded_items)
+        total_items = count_items(folder_path, excluded_items)
         processed_items = 0
         update_progress_bar(processed_items, total_items)
 
         f.write(f"{folder_name}/\n")
-        processed_items = crawl_folder(folder_name, f, 1, processed_items, total_items, excluded_items)
+        processed_items = crawl_folder(folder_path, f, 1, processed_items, total_items, excluded_items)
         
         f.write("```")
 
     end_time = time.time()
     print(f"\n{Fore.LIGHTBLUE_EX}Script completed in {end_time - start_time:.2f} seconds.{Style.RESET_ALL}")
-
 
 def count_items(folder_path, exclude_list=None):
     if exclude_list is None:
