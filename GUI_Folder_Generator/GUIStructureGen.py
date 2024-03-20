@@ -84,7 +84,7 @@ def reset():
     progress_label.config(text="")
 
 def open_github():
-    webbrowser.open_new_tab("https://github.com/itsvaibhavmishra/FolderStructureGen/GUIGen/Readme.md")
+    webbrowser.open_new_tab("https://github.com/itsvaibhavmishra/FolderStructureGen/Readme.md")
 
 root = tk.Tk()
 root.title("Folder Structure Generator by Vaibhaw Mishra")
