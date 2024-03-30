@@ -61,17 +61,34 @@ def crawl_folder(folder_path, output_file, depth, processed_items, total_items, 
     if exclude_list is None:
         exclude_list = []
 
-    for item in os.listdir(folder_path):
-        if item not in exclude_list:
-            processed_items += 1
-            update_progress_bar(processed_items, total_items)
+    # Create a list to hold directories and files separately
+    directories = []
+    files = []
 
-            if os.path.isdir(os.path.join(folder_path, item)):
-                output_file.write("│   " * (depth-1) + "├── " + item + "/\n")
-                processed_items = crawl_folder(os.path.join(folder_path, item), output_file, depth + 1, processed_items, total_items, exclude_list)
-            else:
-                output_file.write("│   " * (depth-1) + "├── " + item + "\n")
+    # Traverse the directory and collect directories and files separately
+    with os.scandir(folder_path) as entries:
+        for entry in entries:
+            if entry.name not in exclude_list:
+                if entry.is_dir():
+                    directories.append(entry.name)
+                else:
+                    files.append(entry.name)
+
+    # Write directories first
+    for directory in directories:
+        processed_items += 1
+        update_progress_bar(processed_items, total_items)
+        output_file.write("│   " * (depth-1) + "├── " + directory + "/\n")
+        processed_items = crawl_folder(os.path.join(folder_path, directory), output_file, depth + 1, processed_items, total_items, exclude_list)
+
+    # Then write files
+    for file in files:
+        processed_items += 1
+        update_progress_bar(processed_items, total_items)
+        output_file.write("│   " * (depth-1) + "├── " + file + "\n")
+
     return processed_items
+
 
 def update_progress_bar(current, total):
     progress = (current / total) * 100 if total != 0 else 100
